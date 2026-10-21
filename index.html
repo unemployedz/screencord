@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>ScreenCord WebRTC Call</title>
+<style>
+:root{--bg:#0b0c0f;--card:#16181d;--line:#2b2d31;--text:#f2f3f5;--muted:#b5bac1;--acc:#5865f2;--ok:#23a559;--bad:#f23f43}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100dvh}
+header{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:18px;margin:0}
+.badge{font-size:12px;color:var(--muted);background:var(--card);padding:4px 8px;border-radius:999px}
+main{max-width:920px;margin:0 auto;padding:16px;display:grid;gap:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+.video-wrap{background:#000;border-radius:12px;overflow:hidden;aspect-ratio:16/10;position:relative;border:1px solid var(--line)}
+video{width:100%;height:100%;object-fit:cover;background:#000}
+.label{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.55);padding:4px 8px;border-radius:6px;font-size:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+button,select{appearance:none;border:0;border-radius:8px;padding:10px 14px;font-weight:600;cursor:pointer;background:var(--acc);color:#fff}
+button.secondary{background:#2b2d31;color:var(--text)}
+button.danger{background:var(--bad)}
+button:disabled{opacity:.45;cursor:not-allowed}
+textarea{width:100%;min-height:110px;margin-top:8px;background:#0e1014;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.muted{color:var(--muted);font-size:13px;line-height:1.45}
+.warn{color:#f0b232;font-size:13px;line-height:1.45;margin-top:8px}
+.status{font-size:13px;color:var(--ok)}
+.status.bad{color:var(--bad)}
+h2{font-size:15px;margin:0 0 6px}
+ol{margin:8px 0 0 18px;padding:0;color:var(--muted);font-size:13px;line-height:1.5}
+code{background:#0e1014;padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<header>
+  <h1>ScreenCord · WebRTC Call</h1>
+  <span class="badge" id="iceBadge">ICE: idle</span>
+</header>
+<main>
+  <div class="card">
+    <h2>Why this exists</h2>
+    <p class="muted">Your Discord (Kettu) build is missing Discord’s iOS <b>Broadcast Upload Extension</b>. The system picker only shows TikTok / ChatGPT / Gemini — those are <b>other apps’</b> extensions and cannot feed Discord’s stream. A Discord plugin cannot fix that.</p>
+    <p class="warn">This page is a standalone WebRTC voice/video (and screen share where the OS allows). Use two devices/browsers and exchange the offer/answer once. No Discord required.</p>
+  </div>
+
+  <div class="grid">
+    <div class="video-wrap"><video id="local" playsinline autoplay muted></video><span class="label">You</span></div>
+    <div class="video-wrap"><video id="remote" playsinline autoplay></video><span class="label">Peer</span></div>
+  </div>
+
+  <div class="card">
+    <h2>Controls</h2>
+    <div class="row">
+      <button id="btnCam">Start camera + mic</button>
+      <button id="btnScreen" class="secondary">Share screen</button>
+      <button id="btnMute" class="secondary" disabled>Mute mic</button>
+      <button id="btnHang" class="danger" disabled>Hang up</button>
+    </div>
+    <p class="status" id="status">Ready.</p>
+    <p class="muted">On iPhone Safari, <b>screen share via browser is limited</b>. Prefer desktop Chrome/Edge for full-display share. Voice/video between phones works.</p>
+  </div>
+
+  <div class="card">
+    <h2>1 · Create call (person A)</h2>
+    <p class="muted">Start media, then create an offer. Send the text to the other person (chat, Notes AirDrop, etc.).</p>
+    <div class="row">
+      <button id="btnOffer">Create offer</button>
+      <button id="btnCopyOffer" class="secondary">Copy offer</button>
+    </div>
+    <textarea id="outOffer" readonly placeholder="Offer SDP appears here…"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>2 · Join call (person B)</h2>
+    <p class="muted">Paste A’s offer, create answer, send the answer back to A.</p>
+    <textarea id="inOffer" placeholder="Paste remote OFFER here…"></textarea>
+    <div class="row">
+      <button id="btnAnswer">Create answer from offer</button>
+      <button id="btnCopyAnswer" class="secondary">Copy answer</button>
+    </div>
+    <textarea id="outAnswer" readonly placeholder="Answer SDP appears here…"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>3 · Person A finishes</h2>
+    <p class="muted">Paste B’s answer here to complete the link.</p>
+    <textarea id="inAnswer" placeholder="Paste remote ANSWER here…"></textarea>
+    <div class="row"><button id="btnApplyAnswer">Apply answer</button></div>
+  </div>
+
+  <div class="card">
+    <h2>How to use (2 people)</h2>
+    <ol>
+      <li>Both open this same page (GitHub Pages / local file / any host).</li>
+      <li>Both tap <b>Start camera + mic</b> and allow permissions.</li>
+      <li><b>A</b> taps Create offer → Copy → sends text to B.</li>
+      <li><b>B</b> pastes offer → Create answer → Copy → sends answer to A.</li>
+      <li><b>A</b> pastes answer → Apply answer. Video/audio should connect.</li>
+    </ol>
+    <p class="muted" style="margin-top:10px">Local IP tip: on the same Wi‑Fi you can host this folder with <code>python3 -m http.server 8080</code> and open <code>http://YOUR_LAN_IP:8080</code> on the other phone. Signaling is still the offer/answer text (no extra server).</p>
+  </div>
+</main>
+<script>
+const iceServers=[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"}];
+const localVideo=document.getElementById("local");
+const remoteVideo=document.getElementById("remote");
+const statusEl=document.getElementById("status");
+const iceBadge=document.getElementById("iceBadge");
+
+let pc=null, localStream=null, screenStream=null, muted=false;
+
+function setStatus(t, bad){
+  statusEl.textContent=t;
+  statusEl.className="status"+(bad?" bad":"");
+}
+function setIce(s){iceBadge.textContent="ICE: "+s}
+
+function ensurePc(){
+  if(pc) return pc;
+  pc=new RTCPeerConnection({iceServers});
+  pc.ontrack=e=>{
+    remoteVideo.srcObject=e.streams[0]||new MediaStream([e.track]);
+  };
+  pc.onicecandidate=e=>{};
+  pc.oniceconnectionstatechange=()=>{
+    setIce(pc.iceConnectionState);
+    if(pc.iceConnectionState==="connected"||pc.iceConnectionState==="completed")
+      setStatus("Connected.");
+    if(pc.iceConnectionState==="failed")
+      setStatus("ICE failed — try again / check network.", true);
+  };
+  pc.onconnectionstatechange=()=>{
+    if(pc.connectionState==="connected") setStatus("Peer connected.");
+  };
+  return pc;
+}
+
+async function waitIceGather(pc){
+  if(pc.iceGatheringState==="complete") return;
+  await new Promise(res=>{
+    function check(){
+      if(pc.iceGatheringState==="complete"){
+        pc.removeEventListener("icegatheringstatechange", check);
+        res();
+      }
+    }
+    pc.addEventListener("icegatheringstatechange", check);
+    setTimeout(res, 4000);
+  });
+}
+
+async function startCam(){
+  try{
+    localStream=await navigator.mediaDevices.getUserMedia({
+      audio:true,
+      video:{facingMode:"user", width:{ideal:1280}, height:{ideal:720}}
+    });
+    localVideo.srcObject=localStream;
+    const p=ensurePc();
+    localStream.getTracks().forEach(t=>p.addTrack(t, localStream));
+    document.getElementById("btnMute").disabled=false;
+    document.getElementById("btnHang").disabled=false;
+    setStatus("Camera + mic ready.");
+  }catch(err){
+    setStatus("Media error: "+err.message, true);
+  }
+}
+
+async function startScreen(){
+  try{
+    if(!navigator.mediaDevices.getDisplayMedia){
+      setStatus("Screen share not supported in this browser (common on iOS).", true);
+      return;
+    }
+    screenStream=await navigator.mediaDevices.getDisplayMedia({video:true, audio:false});
+    const p=ensurePc();
+    const vTrack=screenStream.getVideoTracks()[0];
+    const sender=p.getSenders().find(s=>s.track && s.track.kind==="video");
+    if(sender) await sender.replaceTrack(vTrack);
+    else p.addTrack(vTrack, screenStream);
+    localVideo.srcObject=screenStream;
+    vTrack.onended=()=>{ setStatus("Screen share ended."); };
+    setStatus("Screen share started (browser/OS permitting).");
+  }catch(err){
+    setStatus("Screen share error: "+err.message, true);
+  }
+}
+
+function toggleMute(){
+  if(!localStream) return;
+  muted=!muted;
+  localStream.getAudioTracks().forEach(t=>t.enabled=!muted);
+  document.getElementById("btnMute").textContent=muted?"Unmute mic":"Mute mic";
+}
+
+function hangup(){
+  try{pc&&pc.close()}catch(e){}
+  pc=null;
+  if(localStream){localStream.getTracks().forEach(t=>t.stop()); localStream=null}
+  if(screenStream){screenStream.getTracks().forEach(t=>t.stop()); screenStream=null}
+  localVideo.srcObject=null;
+  remoteVideo.srcObject=null;
+  document.getElementById("btnMute").disabled=true;
+  document.getElementById("btnHang").disabled=true;
+  setIce("idle");
+  setStatus("Hung up.");
+}
+
+async function createOffer(){
+  try{
+    const p=ensurePc();
+    if(!localStream) await startCam();
+    const offer=await p.createOffer({offerToReceiveAudio:true, offerToReceiveVideo:true});
+    await p.setLocalDescription(offer);
+    await waitIceGather(p);
+    document.getElementById("outOffer").value=JSON.stringify(p.localDescription);
+    setStatus("Offer ready — copy and send to peer.");
+  }catch(err){ setStatus("Offer error: "+err.message, true); }
+}
+
+async function createAnswer(){
+  try{
+    const raw=document.getElementById("inOffer").value.trim();
+    if(!raw){ setStatus("Paste an offer first.", true); return; }
+    const offer=JSON.parse(raw);
+    const p=ensurePc();
+    if(!localStream) await startCam();
+    await p.setRemoteDescription(offer);
+    const answer=await p.createAnswer();
+    await p.setLocalDescription(answer);
+    await waitIceGather(p);
+    document.getElementById("outAnswer").value=JSON.stringify(p.localDescription);
+    setStatus("Answer ready — send it back to person A.");
+  }catch(err){ setStatus("Answer error: "+err.message, true); }
+}
+
+async function applyAnswer(){
+  try{
+    const raw=document.getElementById("inAnswer").value.trim();
+    if(!raw){ setStatus("Paste an answer first.", true); return; }
+    const answer=JSON.parse(raw);
+    await ensurePc().setRemoteDescription(answer);
+    setStatus("Answer applied — waiting for ICE…");
+  }catch(err){ setStatus("Apply answer error: "+err.message, true); }
+}
+
+function copy(id){
+  const el=document.getElementById(id);
+  el.select();
+  navigator.clipboard.writeText(el.value).then(()=>setStatus("Copied.")).catch(()=>setStatus("Copy failed — select & copy manually.", true));
+}
+
+document.getElementById("btnCam").onclick=startCam;
+document.getElementById("btnScreen").onclick=startScreen;
+document.getElementById("btnMute").onclick=toggleMute;
+document.getElementById("btnHang").onclick=hangup;
+document.getElementById("btnOffer").onclick=createOffer;
+document.getElementById("btnAnswer").onclick=createAnswer;
+document.getElementById("btnApplyAnswer").onclick=applyAnswer;
+document.getElementById("btnCopyOffer").onclick=()=>copy("outOffer");
+document.getElementById("btnCopyAnswer").onclick=()=>copy("outAnswer");
+</script>
+</body>
+</html>
