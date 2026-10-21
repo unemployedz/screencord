@@ -1,6 +1,6 @@
 {
   "name": "ScreenCord",
-  "description": "Notice only: screenshare cannot be fixed in JS. Use repo WebRTC index.html for calls.",
+  "description": "Discord voice WebRTC info: endpoint/IP, ping, quality. Command .voiceip in a call.",
   "authors": [
     {
       "name": "unemployedz",
@@ -8,8 +8,8 @@
     }
   ],
   "main": "index.js",
-  "hash": "6aee32f8310190d41a7a7d73a242dae7411250bb2790024641e0b52991319009",
+  "hash": "7c21796805a7afdd6dd4a7a171710a28a5f59a3c8773fe40729d65d32e0c8d5b",
   "vendetta": {
-    "icon": "ic_mobile_device"
+    "icon": "ic_call"
   }
 }

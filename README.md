@@ -1,32 +1,34 @@
-# ScreenCord (WebRTC)
+# ScreenCord — Discord WebRTC call plugin (Kettu)
 
-Discord **cannot** do full-device screen share on many **sideloaded / Kettu iOS** builds because the app is missing Discord’s native **Broadcast Upload Extension**. The iOS picker then only lists other apps (TikTok, ChatGPT, Gemini, …) — those extensions do not talk to Discord.
+Shows **Discord voice/video WebRTC** connection info while you are in a call:
 
-This repo is now a **standalone WebRTC voice/video call** page (optional screen share where the browser/OS allows). No Discord plugin can fix ReplayKit.
+- Voice server **hostname / endpoint**
+- Ping & quality (from `RTCConnectionStore` when available)
+- Optional local/remote ICE candidate IPs if the runtime exposes `RTCPeerConnection`
+- Chat command **`.voiceip`** (configurable)
+
+## Not for screen share
+
+iOS full-screen share still needs Discord’s native Broadcast Extension. This plugin only reads **call** WebRTC stats.
+
+## Install
+
+```
+https://raw.githubusercontent.com/unemployedz/screencord/main/dist/manifest.json
+```
+
+```
+https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/dist/manifest.json
+```
+
+Paste **one line**, no trailing slash, no line break.
 
 ## Use
 
-1. Open `index.html` in a browser (two devices/people).
-2. Both allow camera/mic.
-3. Person A: **Create offer** → copy text → send to B.
-4. Person B: paste offer → **Create answer** → send answer to A.
-5. Person A: paste answer → **Apply answer**.
+1. Join a Discord voice call or VC.
+2. Type `.voiceip` in chat **or** open plugin settings → Refresh stats.
+3. Toast / settings show host, ping, quality, any discovered IPs.
 
-Same Wi‑Fi hosting example:
+## License
 
-```bash
-python3 -m http.server 8080
-# other device: http://YOUR_LAN_IP:8080
-```
-
-Or enable **GitHub Pages** on this repo (root) and open the site URL.
-
-## Limits
-
-- **iPhone Safari**: full-screen `getDisplayMedia` is often unavailable; camera/mic calls still work.
-- Desktop Chrome/Edge: screen share works best.
-- Manual offer/answer = no signaling server required.
-
-## Old Kettu plugin
-
-Removed as primary deliverable — JS plugins cannot register an iOS Broadcast Extension.
+MIT
