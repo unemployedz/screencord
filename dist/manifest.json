@@ -1,6 +1,6 @@
 {
   "name": "ScreenCord",
-  "description": "Kettu voice-call diagnostics: exposed endpoint, ping, and quality stats.",
+  "description": "Discord voice WebRTC info: endpoint/IP, ping, quality. Command .voiceip in a call.",
   "authors": [
     {
       "name": "unemployedz",
@@ -8,7 +8,7 @@
     }
   ],
   "main": "index.js",
-  "hash": "0f66cb1917f9c32599677c06c17f7ad096891ed92b9046fa71ae8bacb1bfdfc8",
+  "hash": "7c21796805a7afdd6dd4a7a171710a28a5f59a3c8773fe40729d65d32e0c8d5b",
   "vendetta": {
     "icon": "ic_call"
   }
