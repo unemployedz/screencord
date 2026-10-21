@@ -2,12 +2,18 @@
 
 Kettu plugin files are in `dist/`.
 
-Install with the raw manifest URL:
+**Repository:** https://github.com/unemployedz/uuuu
 
-`https://raw.githubusercontent.com/unemployedz/screencord/main/dist/manifest.json`
+Install manifest URL (jsDelivr):
 
-Or the jsDelivr manifest URL:
+`https://cdn.jsdelivr.net/gh/unemployedz/uuuu@main/dist/manifest.json`
 
-`https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/dist/manifest.json`
+Raw GitHub manifest:
 
-Do not use the directory URL ending in `/dist/` unless the Kettu installer explicitly asks for a folder URL. This build shows best-effort diagnostics only; command `.voiceip` is not implemented until Kettu's command API is verified.
+`https://raw.githubusercontent.com/unemployedz/uuuu/main/dist/manifest.json`
+
+If Kettu's installer explicitly asks for a folder URL, try:
+
+`https://cdn.jsdelivr.net/gh/unemployedz/uuuu@main/dist/`
+
+A directory URL is not itself a JSON manifest. This build shows best-effort call diagnostics only; the `.voiceip` chat command is not implemented until Kettu's command API is verified.
