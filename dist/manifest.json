@@ -1,6 +1,6 @@
 {
   "name": "ScreenCord",
-  "description": "Discord voice WebRTC info: endpoint/IP, ping, quality. Command .voiceip in a call.",
+  "description": "Voice connection diagnostics and .voiceip command for ping and connection quality.",
   "authors": [
     {
       "name": "unemployedz",
@@ -8,7 +8,7 @@
     }
   ],
   "main": "index.js",
-  "hash": "6aee32f8310190d41a7a7d73a242dae7411250bb2790024641e0b52991319009",
+  "hash": "493cfa670071d2d735c63ce3d2ff1ed92270eff06348cfef6692a32dded0405a",
   "vendetta": {
     "icon": "ic_call"
   }
