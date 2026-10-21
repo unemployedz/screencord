@@ -1,24 +1,13 @@
 # ScreenCord
 
-A Kettu/Vendetta-style plugin intended to show local Discord voice diagnostics.
+Clean root-level Kettu plugin layout: `manifest.json` and `index.js` are in the repository root.
 
-## Install
+Install using the raw manifest URL:
 
-Use the folder URL below (the new `plugin` directory avoids the old cached `dist` path):
+`https://raw.githubusercontent.com/unemployedz/screencord/main/manifest.json`
 
-```
-https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/plugin/
-```
+jsDelivr raw manifest:
 
-## Use
+`https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/manifest.json`
 
-1. Remove the old ScreenCord plugin from Kettu.
-2. Install the folder URL above.
-3. Enable the plugin and join a voice channel.
-4. Try `.voiceip` in a channel where Kettu commands are available, or open plugin settings.
-
-The command integration depends on the command API exposed by your specific Kettu build. Ping is shown only when Discord exposes it through a discoverable module.
-
-## Privacy
-
-This plugin does not send diagnostic data to a server and does not collect or display other participants' IP addresses.
+A directory URL is not itself a JSON manifest. Settings show call status, connection state, ping, and a quality estimate only where the installed client exposes those values. The `.voiceip` command is not claimed as working until Kettu's command-registration API is verified.

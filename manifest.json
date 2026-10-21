@@ -1,0 +1,15 @@
+{
+  "name": "ScreenCord",
+  "description": "Voice call diagnostics for Kettu.",
+  "authors": [
+    {
+      "name": "unemployedz",
+      "id": "311927274"
+    }
+  ],
+  "main": "index.js",
+  "hash": "6cb2b68ce3e2fc0f2f5bf161692c98ceccc3f2f786a7e23e8e9a11169e50e4e9",
+  "vendetta": {
+    "icon": "ic_call"
+  }
+}
