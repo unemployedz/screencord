@@ -1,34 +1,24 @@
-# ScreenCord — Discord WebRTC call plugin (Kettu)
+# ScreenCord
 
-Shows **Discord voice/video WebRTC** connection info while you are in a call:
-
-- Voice server **hostname / endpoint**
-- Ping & quality (from `RTCConnectionStore` when available)
-- Optional local/remote ICE candidate IPs if the runtime exposes `RTCPeerConnection`
-- Chat command **`.voiceip`** (configurable)
-
-## Not for screen share
-
-iOS full-screen share still needs Discord’s native Broadcast Extension. This plugin only reads **call** WebRTC stats.
+A Kettu/Vendetta-style plugin intended to show local Discord voice diagnostics.
 
 ## Install
 
-```
-https://raw.githubusercontent.com/unemployedz/screencord/main/dist/manifest.json
-```
+Use the folder URL below (the new `plugin` directory avoids the old cached `dist` path):
 
 ```
-https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/dist/manifest.json
+https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/plugin/
 ```
-
-Paste **one line**, no trailing slash, no line break.
 
 ## Use
 
-1. Join a Discord voice call or VC.
-2. Type `.voiceip` in chat **or** open plugin settings → Refresh stats.
-3. Toast / settings show host, ping, quality, any discovered IPs.
+1. Remove the old ScreenCord plugin from Kettu.
+2. Install the folder URL above.
+3. Enable the plugin and join a voice channel.
+4. Try `.voiceip` in a channel where Kettu commands are available, or open plugin settings.
 
-## License
+The command integration depends on the command API exposed by your specific Kettu build. Ping is shown only when Discord exposes it through a discoverable module.
 
-MIT
+## Privacy
+
+This plugin does not send diagnostic data to a server and does not collect or display other participants' IP addresses.
