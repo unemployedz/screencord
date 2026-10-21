@@ -65,7 +65,7 @@
   return {
     onLoad() {
       try {
-        const commands = common.commands;
+        const commands = vendetta.commands || common.commands;
         if (commands && typeof commands.registerCommand === "function") {
           unregister = commands.registerCommand({
             name: "voiceip",
