@@ -1,46 +1,32 @@
-# ScreenCord
+# ScreenCord (WebRTC)
 
-Kettu helper for Discord **mobile screen share**.
+Discord **cannot** do full-device screen share on many **sideloaded / Kettu iOS** builds because the app is missing Discord’s native **Broadcast Upload Extension**. The iOS picker then only lists other apps (TikTok, ChatGPT, Gemini, …) — those extensions do not talk to Discord.
 
-## Hard limit (read this)
+This repo is now a **standalone WebRTC voice/video call** page (optional screen share where the browser/OS allows). No Discord plugin can fix ReplayKit.
 
-Full-device screen share is **not** implemented in JavaScript.
+## Use
 
-| Layer | Who controls it |
-|-------|-----------------|
-| Share button / experiments | Discord JS (plugin can patch) |
-| Actual pixels of your screen | **iOS ReplayKit Broadcast Extension** or **Android MediaProjection** (native) |
+1. Open `index.html` in a browser (two devices/people).
+2. Both allow camera/mic.
+3. Person A: **Create offer** → copy text → send to B.
+4. Person B: paste offer → **Create answer** → send answer to A.
+5. Person A: paste answer → **Apply answer**.
 
-If the system picker only lists random apps and they “don’t work”, Discord’s **native** screen-share extension is missing or broken in your build (very common on **sideloaded / Kettu iOS** IPAs). No plugin can inject a Broadcast Upload Extension into the app.
+Same Wi‑Fi hosting example:
 
-### Real fixes
-
-**iOS**
-1. Use **App Store Discord** when you need reliable full-screen share, **or**
-2. Use an IPA that still ships Discord’s screen broadcast extension and is signed with matching entitlements/App Group.
-
-**Android**
-1. Choose **Entire screen** (not a single app) when prompted.
-2. Grant capture permission; disable aggressive battery kill for Discord.
-3. DRM apps (Netflix, etc.) will stay black — OS/app policy, not Discord alone.
-
-## What ScreenCord *does*
-
-- Force some client-side `canStream` / screenshare capability checks to allow the button
-- Nudge related experiment buckets when present
-
-## Install
-
-```
-https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/dist/manifest.json
+```bash
+python3 -m http.server 8080
+# other device: http://YOUR_LAN_IP:8080
 ```
 
-or
+Or enable **GitHub Pages** on this repo (root) and open the site URL.
 
-```
-https://raw.githubusercontent.com/unemployedz/screencord/main/dist/manifest.json
-```
+## Limits
 
-## License
+- **iPhone Safari**: full-screen `getDisplayMedia` is often unavailable; camera/mic calls still work.
+- Desktop Chrome/Edge: screen share works best.
+- Manual offer/answer = no signaling server required.
 
-MIT
+## Old Kettu plugin
+
+Removed as primary deliverable — JS plugins cannot register an iOS Broadcast Extension.

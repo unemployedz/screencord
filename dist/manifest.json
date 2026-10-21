@@ -1,6 +1,6 @@
 {
   "name": "ScreenCord",
-  "description": "Screenshare helper: unblocks JS gates. Cannot replace OS-level capture (ReplayKit/MediaProjection).",
+  "description": "Notice only: screenshare cannot be fixed in JS. Use repo WebRTC index.html for calls.",
   "authors": [
     {
       "name": "unemployedz",
@@ -8,7 +8,7 @@
     }
   ],
   "main": "index.js",
-  "hash": "7fe408125b9f0e5356927f224b57cf639f6faa75bd4a70d001b53799ece46299",
+  "hash": "6aee32f8310190d41a7a7d73a242dae7411250bb2790024641e0b52991319009",
   "vendetta": {
     "icon": "ic_mobile_device"
   }
