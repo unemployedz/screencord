@@ -1,13 +1,13 @@
 # ScreenCord
 
-Clean root-level Kettu plugin layout: `manifest.json` and `index.js` are in the repository root.
+Kettu plugin files are in `dist/`.
 
-Install using the raw manifest URL:
+Install with the raw manifest URL:
 
-`https://raw.githubusercontent.com/unemployedz/screencord/main/manifest.json`
+`https://raw.githubusercontent.com/unemployedz/screencord/main/dist/manifest.json`
 
-jsDelivr raw manifest:
+Or the jsDelivr manifest URL:
 
-`https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/manifest.json`
+`https://cdn.jsdelivr.net/gh/unemployedz/screencord@main/dist/manifest.json`
 
-A directory URL is not itself a JSON manifest. Settings show call status, connection state, ping, and a quality estimate only where the installed client exposes those values. The `.voiceip` command is not claimed as working until Kettu's command-registration API is verified.
+Do not use the directory URL ending in `/dist/` unless the Kettu installer explicitly asks for a folder URL. This build shows best-effort diagnostics only; command `.voiceip` is not implemented until Kettu's command API is verified.
